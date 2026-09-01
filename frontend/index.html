@@ -1,0 +1,587 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Instant Mechanic Dashboard</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="dashboard">
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+
+            <h2>Instant Mechanic</h2>
+
+            <nav>
+
+                <a href="#" class="active"
+                   onclick="showSection('dashboardSection', this)">
+                    Dashboard
+                </a>
+
+                <a href="#"
+                   onclick="showSection('bookingsSection', this)">
+                    Bookings
+                </a>
+
+                <a href="#"
+                   onclick="showSection('customersSection', this)">
+                    Customers
+                </a>
+
+                <a href="#"
+                   onclick="showSection('mechanicsSection', this)">
+                    Mechanics
+                </a>
+
+                <a href="#"
+                   onclick="showSection('servicesSection', this)">
+                    Services
+                </a>
+
+            </nav>
+
+        </aside>
+
+
+        <!-- Main Content -->
+        <main class="main-content">
+
+
+            <!-- ==================== DASHBOARD ==================== -->
+
+            <section id="dashboardSection">
+
+                <!-- Dashboard Header -->
+                <header class="topbar">
+
+                    <div>
+                        <h1>Dashboard</h1>
+                        <p>Welcome back, Admin</p>
+                    </div>
+
+                    <div class="admin-profile">
+                        <span>Admin</span>
+                    </div>
+
+                </header>
+
+
+                <!-- ==================== STATISTICS ==================== -->
+
+                <section class="stats-grid">
+
+                    <div class="stat-card">
+                        <p>Total Bookings</p>
+                        <h2 id="totalBookings">0</h2>
+                    </div>
+
+                    <div class="stat-card">
+                        <p>Today's Bookings</p>
+                        <h2 id="todayBookings">0</h2>
+                    </div>
+
+                    <div class="stat-card">
+                        <p>Completed</p>
+                        <h2 id="completedBookings">0</h2>
+                    </div>
+
+                    <div class="stat-card">
+                        <p>Pending</p>
+                        <h2 id="pendingBookings">0</h2>
+                    </div>
+
+                    <div class="stat-card">
+                        <p>Cancelled</p>
+                        <h2 id="cancelledBookings">0</h2>
+                    </div>
+
+                    <div class="stat-card">
+                        <p>Total Revenue</p>
+                        <h2 id="totalRevenue">₹0</h2>
+                    </div>
+
+                    <div class="stat-card">
+                        <p>Active Mechanics</p>
+                        <h2 id="activeMechanics">0</h2>
+                    </div>
+
+                    <div class="stat-card">
+                        <p>Total Customers</p>
+                        <h2 id="totalCustomers">0</h2>
+                    </div>
+
+                </section>
+
+
+                <!-- ==================== ANALYTICS ==================== -->
+
+                <section class="analytics-grid">
+
+                    <!-- Booking Status Chart -->
+                    <div class="dashboard-section">
+
+                        <div class="section-header">
+                            <h2>Booking Status</h2>
+                        </div>
+
+                        <div class="chart-container">
+                            <canvas id="bookingStatusChart"></canvas>
+                        </div>
+
+                    </div>
+
+
+                    <!-- Revenue Summary -->
+                    <div class="dashboard-section">
+
+                        <div class="section-header">
+                            <h2>Revenue Summary</h2>
+                        </div>
+
+                        <div class="revenue-summary">
+
+                            <div>
+                                <p>Total Revenue</p>
+                                <h2 id="chartTotalRevenue">₹0</h2>
+                            </div>
+
+                            <div>
+                                <p>Completed Revenue</p>
+                                <h2 id="chartCompletedRevenue">₹0</h2>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- ==================== RECENT BOOKINGS ==================== -->
+
+                <section class="dashboard-section">
+
+                    <div class="section-header">
+
+                        <h2>Recent Bookings</h2>
+
+                        <button onclick="loadBookings()">
+                            Refresh
+                        </button>
+
+                    </div>
+
+
+                    <div class="table-container">
+
+                        <table>
+
+                            <thead>
+
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Customer</th>
+                                    <th>Vehicle</th>
+                                    <th>Service</th>
+                                    <th>Mechanic</th>
+                                    <th>Status</th>
+                                    <th>Amount</th>
+                                </tr>
+
+                            </thead>
+
+
+                            <tbody id="bookingTableBody">
+
+                                <tr>
+                                    <td colspan="7">
+                                        Loading bookings...
+                                    </td>
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </section>
+
+            </section>
+
+
+            <!-- ==================== BOOKINGS ==================== -->
+
+            <section id="bookingsSection"
+                     class="page-section"
+                     style="display: none;">
+
+                <header class="topbar">
+
+                    <div>
+                        <h1>Bookings</h1>
+                        <p>Manage all service bookings</p>
+                    </div>
+
+                </header>
+
+
+                <div class="dashboard-section">
+
+                    <div class="section-header">
+
+                        <h2>All Bookings</h2>
+
+                        <button onclick="loadBookingsPage()">
+                            Refresh
+                        </button>
+
+                    </div>
+
+
+                    <div class="booking-controls">
+
+                        <input
+                            type="text"
+                            id="bookingSearch"
+                            placeholder="Search customer or vehicle..."
+                            oninput="filterBookings()"
+                        >
+
+
+                        <select
+                            id="bookingStatusFilter"
+                            onchange="filterBookings()">
+
+                            <option value="">All Status</option>
+
+                            <option value="PENDING">
+                                Pending
+                            </option>
+
+                            <option value="ASSIGNED">
+                                Assigned
+                            </option>
+
+                            <option value="MECHANIC_ON_THE_WAY">
+                                On the Way
+                            </option>
+
+                            <option value="COMPLETED">
+                                Completed
+                            </option>
+
+                            <option value="CANCELLED">
+                                Cancelled
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="table-container">
+
+                        <table>
+
+                            <thead>
+
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Customer</th>
+                                    <th>Vehicle</th>
+                                    <th>Service</th>
+                                    <th>Mechanic</th>
+                                    <th>Status</th>
+                                    <th>Amount</th>
+                                    <th>Date</th>
+                                </tr>
+
+                            </thead>
+
+
+                            <tbody id="allBookingsTableBody">
+
+                                <tr>
+                                    <td colspan="8">
+                                        Loading bookings...
+                                    </td>
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- ==================== CUSTOMERS ==================== -->
+
+            <section id="customersSection"
+                     class="page-section"
+                     style="display: none;">
+
+                <header class="topbar">
+
+                    <div>
+                        <h1>Customers</h1>
+                        <p>Manage registered customers</p>
+                    </div>
+
+                    <button onclick="loadCustomers()">
+                        Refresh
+                    </button>
+
+                </header>
+
+
+                <div class="dashboard-section">
+
+                    <div class="booking-controls">
+
+                        <input
+                            type="text"
+                            id="customerSearch"
+                            placeholder="Search customer..."
+                            oninput="filterCustomers()"
+                        >
+
+                    </div>
+
+
+                    <div class="table-container">
+
+                        <table>
+
+                            <thead>
+
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                </tr>
+
+                            </thead>
+
+
+                            <tbody id="customersTableBody">
+
+                                <tr>
+                                    <td colspan="4">
+                                        Loading customers...
+                                    </td>
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- ==================== MECHANICS ==================== -->
+
+            <section id="mechanicsSection"
+                     class="page-section"
+                     style="display: none;">
+
+                <header class="topbar">
+
+                    <div>
+                        <h1>Mechanics</h1>
+                        <p>Manage mechanics and their availability</p>
+                    </div>
+
+                    <button onclick="loadMechanics()">
+                        Refresh
+                    </button>
+
+                </header>
+
+
+                <div class="dashboard-section">
+
+                    <div class="booking-controls">
+
+                        <input
+                            type="text"
+                            id="mechanicSearch"
+                            placeholder="Search mechanic..."
+                            oninput="filterMechanics()"
+                        >
+
+
+                        <select
+                            id="mechanicStatusFilter"
+                            onchange="filterMechanics()">
+
+                            <option value="">
+                                All Status
+                            </option>
+
+                            <option value="AVAILABLE">
+                                Available
+                            </option>
+
+                            <option value="BUSY">
+                                Busy
+                            </option>
+
+                            <option value="OFFLINE">
+                                Offline
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="table-container">
+
+                        <table>
+
+                            <thead>
+
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Phone</th>
+                                    <th>Status</th>
+                                    <th>Jobs Completed</th>
+                                </tr>
+
+                            </thead>
+
+
+                            <tbody id="mechanicsTableBody">
+
+                                <tr>
+                                    <td colspan="5">
+                                        Loading mechanics...
+                                    </td>
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- ==================== SERVICES ==================== -->
+
+            <section id="servicesSection"
+                     class="page-section"
+                     style="display: none;">
+
+                <header class="topbar">
+
+                    <div>
+                        <h1>Services</h1>
+                        <p>Manage available mechanic services</p>
+                    </div>
+
+                    <button onclick="loadServices()">
+                        Refresh
+                    </button>
+
+                </header>
+
+
+                <div class="dashboard-section">
+
+                    <div class="booking-controls">
+
+                        <input
+                            type="text"
+                            id="serviceSearch"
+                            placeholder="Search service..."
+                            oninput="filterServices()"
+                        >
+
+
+                        <select
+                            id="serviceCategoryFilter"
+                            onchange="filterServices()">
+
+                            <option value="">
+                                All Categories
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="table-container">
+
+                        <table>
+
+                            <thead>
+
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Service</th>
+                                    <th>Category</th>
+                                    <th>Price</th>
+                                </tr>
+
+                            </thead>
+
+
+                            <tbody id="servicesTableBody">
+
+                                <tr>
+                                    <td colspan="4">
+                                        Loading services...
+                                    </td>
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+        </main>
+
+    </div>
+
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Main JavaScript -->
+    <script src="script.js"></script>
+
+</body>
+
+</html>
+```

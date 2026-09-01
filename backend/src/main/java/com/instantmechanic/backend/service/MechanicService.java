@@ -1,0 +1,34 @@
+package com.instantmechanic.backend.service;
+
+import com.instantmechanic.backend.entity.Mechanic;
+import com.instantmechanic.backend.repository.MechanicRepository;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+
+@Service
+public class MechanicService {
+
+    private final MechanicRepository mechanicRepository;
+
+    public MechanicService(MechanicRepository mechanicRepository) {
+        this.mechanicRepository = mechanicRepository;
+    }
+
+    public List<Mechanic> getAllMechanics() {
+        return mechanicRepository.findAll();
+    }
+
+    public Optional<Mechanic> getMechanicById(Long id) {
+        return mechanicRepository.findById(id);
+    }
+
+    public Mechanic createMechanic(Mechanic mechanic) {
+        return mechanicRepository.save(mechanic);
+    }
+
+    public void deleteMechanic(Long id) {
+        mechanicRepository.deleteById(id);
+    }
+}
