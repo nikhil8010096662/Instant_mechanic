@@ -6,6 +6,10 @@ The application provides a centralized dashboard for managing bookings, customer
 
 ## Features
 
+## Dashboard Preview
+
+![Instant Mechanic Dashboard](dashboard.png)
+
 ### Dashboard
 
 * Total bookings
